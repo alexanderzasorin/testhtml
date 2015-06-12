@@ -123,6 +123,12 @@ npl-hz-0-node2 ansible_ssh_host=5.9.18.212 ansible_connection=ssh ansible_ssh_us
 npl-hz-0-node3 ansible_ssh_host=5.9.2.205 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
 npl-hz-0-node4 ansible_ssh_host=178.63.27.10 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
 npl-hz-0-node5 ansible_ssh_host=176.9.158.199 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
+[allnodes]
+npl-hz-0-node1 ansible_ssh_host=5.9.47.146 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
+npl-hz-0-node2 ansible_ssh_host=5.9.18.212 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
+npl-hz-0-node3 ansible_ssh_host=5.9.2.205 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
+npl-hz-0-node4 ansible_ssh_host=178.63.27.10 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
+npl-hz-0-node5 ansible_ssh_host=176.9.158.199 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
 ```
 
 3.  Тестовая команда: ```ansible -a 'ls -la' test```
@@ -133,8 +139,41 @@ drwxr-xr-x   2 topsolver  staff   68 Jun 12 15:42 .
 drwxr-xr-x  16 topsolver  staff  544 Jun 12 08:47 ..
 ```
 подробности на Хабре [Ansible — давайте попробуем](http://habrahabr.ru/company/express42/blog/254959/)
-4. 
-4. 
+4. Отключаем проверку host key
+```nano /usr/local/etc/ansible/ansible.cfg```
+
+```nano
+[defaults]
+host_key_checking = False
+```
+
+4. Создаем yaml скрипт для выполнения установки Ubuntu повсюду
+```nano install_ubuntu.yml```
+```nano
+---
+- hosts: nodes2-5
+  remote_user: root
+  tasks:
+    - name: install ubuntu 14.04 on nodes2-5 with raid0
+      command: /root/.oldroot/nfs/install/installimage -r yes -l 0 -b grub -n {{ inventory_hostname }} -p "swap:swap:16G,/boot:ext3:512M,/:ext4:all" -d$
+      register: result
+    - debug: var=result
+
+- hosts: node1
+  remote_user: root
+  tasks:
+    - name: install ubuntu 14.04 on node1 with raid1
+      command: /root/.oldroot/nfs/install/installimage -r yes -l 1 -b grub -n {{ inventory_hostname }} -p "swap:swap:16G,/boot:ext3:512M,/:ext4:all" -d$
+      register: result
+    - debug: var=result
+
+- hosts: allnodes
+  remote_user: root
+    - name: reboot 
+      command: reboot
+```
+
+5. 
 df
 
 
