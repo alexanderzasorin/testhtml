@@ -9,6 +9,20 @@
 Первая установка ubuntu, и ключей
 -------------
 
+На входе у нас есть некий 
+	логин: #427600+j\*\*\*\*\*\* 
+	пароль \*\*\*\*\*\* 
+	адрес: https://robot.your-server.de
+==Задача
+Логинимся, и попадаем в консоль, во вкладке servers видим:
+![enter image description here](https://drive.google.com/file/d/0B4VcKk8tESBOYlBmZE5JV2xMSkk/view?usp=sharing)
+
+Первым делом
+
+
+
+
+
 Hey! I'm your first Markdown document in **StackEdit**[^stackedit]. Don't delete me, I'm very helpful! I can be recovered anyway in the **Utils** tab of the <i class="icon-cog"></i> **Settings** dialog.
 
 ----------
