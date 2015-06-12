@@ -53,12 +53,11 @@ ssh-rsa AAAAB...
 4. В Servers -> Reset делаем hard reset
 ![enter image description here](https://drive.google.com/file/d/0B4VcKk8tESBOYlBmZE5JV2xMSkk/view?usp=sharing)
 5. В консоли подключаемся по ssh ```ssh -i bigdata.pem root@5.9.47.146```
-6. Устанавливаем образ ubuntu
+7. Устанавливаем образ ubuntu
 ```bash
 installimage -r yes -l 1 -b grub -n npl-hz-0-node1 -p "swap:swap:16G,/boot:ext3:512M,/:ext4:all" -d sda,sdb -s en -i root/.oldroot/nfs/images/Ubuntu-1404-trusty-64-minimal.tar.gz -K /root/.ssh/authorized_keys -a
 ```
 > **installimage** - это специальная утилита hetzner. Толкового описания параметров у нее нет, но есть *installimage -h* и исходные коды, из которых можно понять, как работают параметры
-
 | Параметр     | Что делает|
 | :------- | :---- |
 | ```-r yes``` | включаем RAID |
@@ -70,13 +69,34 @@ installimage -r yes -l 1 -b grub -n npl-hz-0-node1 -p "swap:swap:16G,/boot:ext3:
 | ```-s en```     | лучше английский, чем немецкий    |
 | ```-i root/.oldroot/nfs/images/Ubuntu-1404-trusty-64-minimal.tar.gz```     | образ стабильной Ubuntu 1404    |
 | ```-K /root/.ssh/authorized_keys```     | ключи копируем те же: bigdata    |
-| ```-a```     | тихая установка в автоматическом режиме - если без этого - все параметры можно будет поменять вручную и запустить установку    |
+| ```-a```     | тихая установка в автоматическом режиме. Без этого ключа можно будет поменять вручную некоторые параметры перед запуском установки    |
+Больше информации про hetzner installimage [тут](http://wiki.hetzner.de/index.php/Installimage/ru)
+8. Подключаемся по ssh к ноде
+```bash
+#предварительно очищаем в файле authorized_hosts старый fingerprint (который остался сохранен на локальной машине с момента подключения к rescue linux, до установки нашего образа Ubuntu 14.04)
+ssh-keygen -R 5.9.47.146
+#теперь спокойно подключимся - приватный ключ подойдет
+ssh -i bigdata.pem root@5.9.47.146
+```
+9. Повторяем для остальных нод, поменяв тип RAID на 0
 
 
 
 
+#### Немного автоматизации от ansible
+Нужно сделать какие-то действия для нескольких серверов. Чего бы не автоматизировать?
 
-#### Устанавливаем образ ubuntu
+#### Часть действий все равно вручную
+- Залогиниться в панель управления каждым сервером
+- прописать ключи для rescue 
+- запустить rescue
+- сделать automated hard reset
+
+#### Задача
+- написать скрипт, которому можно скормить много ip-адресов и будущих названий хостов, ключ доступа - и он на все установит Ubuntu 14.04
+	- учесть, что на ноде-1 нужно сделать RAID1, а на остальных RAID0
+- запустить скрипт
+
 
 df
 
