@@ -169,7 +169,8 @@ host_key_checking = False
 
 - hosts: allnodes
   remote_user: root
-    - name: reboot 
+  tasks:
+    - name: reboot
       command: reboot
 ```
 
