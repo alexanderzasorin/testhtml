@@ -58,6 +58,7 @@ ssh-rsa AAAAB...
 installimage -r yes -l 1 -b grub -n npl-hz-0-node1 -p "swap:swap:16G,/boot:ext3:512M,/:ext4:all" -d sda,sdb -s en -i root/.oldroot/nfs/images/Ubuntu-1404-trusty-64-minimal.tar.gz -K /root/.ssh/authorized_keys -a
 ```
 > **installimage** - это специальная утилита hetzner. Толкового описания параметров у нее нет, но есть *installimage -h* и исходные коды, из которых можно понять, как работают параметры
+
 | Параметр     | Что делает|
 | :------- | :---- |
 | ```-r yes``` | включаем RAID |
