@@ -99,7 +99,42 @@ ssh -i bigdata.pem root@5.9.47.146
 	- учесть, что на ноде-1 нужно сделать RAID1, а на остальных RAID0
 - запустить скрипт
 
+#### Решение
 
+1. Установим прям на своем Маке **ansible** вот так
+```brew install ansible```
+ну или так http://docs.ansible.com/intro_installation.html
+2. Добавим описание хостов, с которыми работаем: 
+- localhost для поиграться
+- наши ноды из hetzner: отдельно будущую *namenode*, остальные в кучу.
+```bash
+#устанавливали не под рутом, так что настройки тут
+#файл нужно новый создать
+nano /usr/local/etc/ansible/hosts
+```
+
+```nano
+[test]
+localhost ansible_connection=local
+[node1]
+npl-hz-0-node1 ansible_ssh_host=5.9.47.146 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
+[nodes2-5]
+npl-hz-0-node2 ansible_ssh_host=5.9.18.212 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
+npl-hz-0-node3 ansible_ssh_host=5.9.2.205 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
+npl-hz-0-node4 ansible_ssh_host=178.63.27.10 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
+npl-hz-0-node5 ansible_ssh_host=176.9.158.199 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_private_key_file=~/.ssh/bigdata.pem
+```
+
+3.  Тестовая команда: ```ansible -a 'ls -la' test```
+```bash
+localhost | success | rc=0 >>
+total 0
+drwxr-xr-x   2 topsolver  staff   68 Jun 12 15:42 .
+drwxr-xr-x  16 topsolver  staff  544 Jun 12 08:47 ..
+```
+подробности на Хабре [Ansible — давайте попробуем](http://habrahabr.ru/company/express42/blog/254959/)
+4. 
+4. 
 df
 
 
