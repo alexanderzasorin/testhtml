@@ -1,6 +1,13 @@
-Welcome to StackEdit!
+Устанавливаем учебный кластер на Hetzner
 ===================
 
+Регистрация
+-------------
+
+Тут инфа про регистрацию
+
+Первая установка ubuntu, и ключей
+-------------
 
 Hey! I'm your first Markdown document in **StackEdit**[^stackedit]. Don't delete me, I'm very helpful! I can be recovered anyway in the **Utils** tab of the <i class="icon-cog"></i> **Settings** dialog.
 
