@@ -9,15 +9,88 @@
 Первая установка ubuntu, и ключей
 -------------
 
-На входе у нас есть некий 
+#### На входе 
+
 	логин: #427600+j\*\*\*\*\*\* 
 	пароль \*\*\*\*\*\* 
 	адрес: https://robot.your-server.de
-==Задача
-Логинимся, и попадаем в консоль, во вкладке servers видим:
-![enter image description here](https://drive.google.com/file/d/0B4VcKk8tESBOYlBmZE5JV2xMSkk/view?usp=sharing)
+#### Задача (для каждого сервера)
 
-Первым делом
+- узнать ip ноды
+- прописать ключи для доступа к серверу
+- установить ubuntu на ноде
+	- сделать одну ноду для понадежнее (RAID 1), будет использоваться как namenode
+	- сделать остальные ноды побыстрее (RAID 0): HDFS все равно займется репликацией
+
+#### Решение
+1. У себя на Макбуке в консоли генерируем private key, вводя пустую passphrase
+```bash
+$ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/Users/topsolver/.ssh/id_rsa):bigdata.pem
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in bigdata.pem.
+Your public key has been saved in bigdata.pem.pub.
+...
+
+```
+
+Был сгенерирован заодно и public key, но если вдруг нужно получить публичный ключ по **уже имеющемуся** приватному, то
+
+```bash
+ssh-keygen -y -f bigdata.pem
+ssh-rsa AAAAB...
+...............
+...pt0d36/CcZ
+```
+2. Логинимся на https://robot.your-server.de, и попадаем в консоль, во вкладке servers видим: ip-адрес сервера
+![enter image description here](https://drive.google.com/file/d/0B4VcKk8tESBOYlBmZE5JV2xMSkk/view?usp=sharing)
+2. В *Key management* -> *New key* добавляем public key 
+![enter image description here](https://drive.google.com/file/d/0B4VcKk8tESBOYlBmZE5JV2xMSkk/view?usp=sharing)
+3. В Servers -> Rescue выделяем Linux, 64 bit, все ключи
+![enter image description here](https://drive.google.com/file/d/0B4VcKk8tESBOYlBmZE5JV2xMSkk/view?usp=sharing)
+4. В Servers -> Reset делаем hard reset
+![enter image description here](https://drive.google.com/file/d/0B4VcKk8tESBOYlBmZE5JV2xMSkk/view?usp=sharing)
+5. В консоли подключаемся по ssh ```ssh -i bigdata.pem root@5.9.47.146```
+6. Устанавливаем образ ubuntu
+```bash
+installimage -r yes -l 1 -b grub -n npl-hz-0-node1 -p "swap:swap:16G,/boot:ext3:512M,/:ext4:all" -d sda,sdb -s en -i root/.oldroot/nfs/images/Ubuntu-1404-trusty-64-minimal.tar.gz -K /root/.ssh/authorized_keys -a
+```
+> **installimage** - это специальная утилита hetzner. Толкового описания параметров у нее нет, но есть *installimage -h* и исходные коды, из которых можно понять, как работают параметры
+
+| Параметр     | Что делает|
+| :------- | :---- |
+| ```-r yes``` | включаем RAID |
+| ```-l 1```    | тип RAID (для namenode мы хотим зеркальный RAID 1)   |
+| ```-b grub```     | тип загрузчика - просят не менять    |
+| ```-n npl-hz-0-node1```     | имя хоста (внутреннее)    |
+| ```-p "swap:swap:16G,/boot:ext3:512M,/:ext4:all"```     | partitions: все (кроме небольшого куска) место в одну партицию    |
+| ```-d sda,sdb```     | используем оба жестких диска    |
+| ```-s en```     | лучше английский, чем немецкий    |
+| ```-i root/.oldroot/nfs/images/Ubuntu-1404-trusty-64-minimal.tar.gz```     | образ стабильной Ubuntu 1404    |
+| ```-K /root/.ssh/authorized_keys```     | ключи копируем те же: bigdata    |
+| ```-a```     | тихая установка в автоматическом режиме - если без этого - все параметры можно будет поменять вручную и запустить установку    |
+
+
+
+
+
+#### Устанавливаем образ ubuntu
+
+df
+
+
+ы
+ы
+ы
+ы
+ы
+ы
+ыы
+
+ыы
+
 
 
 
