@@ -72,6 +72,7 @@ installimage -r yes -l 1 -b grub -n npl-hz-0-node1 -p "swap:swap:16G,/boot:ext3:
 | ```-K /root/.ssh/authorized_keys```     | ключи копируем те же: bigdata    |
 | ```-a```     | тихая установка в автоматическом режиме. Без этого ключа можно будет поменять вручную некоторые параметры перед запуском установки    |
 Больше информации про hetzner installimage [тут](http://wiki.hetzner.de/index.php/Installimage/ru)
+
 8. Подключаемся по ssh к ноде
 ```bash
 #предварительно очищаем в файле authorized_hosts старый fingerprint (который остался сохранен на локальной машине с момента подключения к rescue linux, до установки нашего образа Ubuntu 14.04)
